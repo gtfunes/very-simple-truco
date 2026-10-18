@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="Anotador de truco: los puntos de cada equipo con fósforos, en malas y buenas." />
+    <meta name="theme-color" content="#12122a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Truco" />
+    <title>Truco</title>
+    <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="icons/icon-180.png" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <h1><img class="logo" src="icons/icon.svg" alt="" width="32" height="32" /> Truco</h1>
+      <button id="undo" type="button">↩ Deshacer</button>
+    </header>
+
+    <main class="app">
+      <section class="game" aria-label="Tanteador">
+        <p class="banner" id="banner" hidden></p>
+        <button class="next" id="next" type="button" hidden>Otro partido</button>
+        <p class="status" id="status" aria-live="polite"></p>
+
+        <div class="board" id="board">
+          <section class="team" aria-labelledby="name-0">
+            <h2><button class="team-name" id="name-0" type="button"></button></h2>
+            <p class="games" id="games-0" hidden></p>
+            <p class="points" id="points-0"></p>
+            <p class="stage" id="stage-0"></p>
+            <div class="tally" id="tally-0" aria-hidden="true"></div>
+          </section>
+          <section class="team" aria-labelledby="name-1">
+            <h2><button class="team-name" id="name-1" type="button"></button></h2>
+            <p class="games" id="games-1" hidden></p>
+            <p class="points" id="points-1"></p>
+            <p class="stage" id="stage-1"></p>
+            <div class="tally" id="tally-1" aria-hidden="true"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="options" aria-labelledby="options-title">
+        <h2 id="options-title">Partido</h2>
+        <label class="field">
+          A
+          <select id="target">
+            <option value="30">30 (malas y buenas)</option>
+            <option value="15">15</option>
+          </select>
+        </label>
+        <div class="option-buttons">
+          <button id="reset" type="button">Nuevo partido</button>
+          <button id="clear-games" type="button">Borrar partidos ganados</button>
+        </div>
+      </section>
+    </main>
+
+    <!-- On phones the score buttons sit in a bar pinned to the bottom, one half per team. -->
+    <div class="actions" id="actions">
+      <div class="side">
+        <div class="small">
+          <button id="minus-0" type="button">−1</button>
+          <button id="plus2-0" type="button">+2</button>
+          <button id="plus3-0" type="button">+3</button>
+        </div>
+        <button class="primary" id="plus1-0" type="button">+1</button>
+      </div>
+      <div class="side">
+        <div class="small">
+          <button id="minus-1" type="button">−1</button>
+          <button id="plus2-1" type="button">+2</button>
+          <button id="plus3-1" type="button">+3</button>
+        </div>
+        <button class="primary" id="plus1-1" type="button">+1</button>
+      </div>
+    </div>
+  </body>
+</html>
