@@ -44,6 +44,7 @@ House rules vary (in Mendoza, for example, the falta envido always wins the game
 | `icons/`               | `icon.svg` (source and favicon) and the PNG sizes made from it.          |
 | `.nojekyll`            | Tells GitHub Pages to serve the files as they are, without Jekyll.       |
 | `CNAME`                | The custom domain of the GitHub Pages site (`truco.gtfunes.com`).        |
+| `.github/`             | `check.mjs` and the GitHub Action that runs it on each push (see [Deploy](#deploy)). |
 
 ## Run locally
 
@@ -69,6 +70,7 @@ The setup, done once:
 
 - Pages serves every tracked file, so `README.md` and `LICENSE` also get public URLs. There is nothing secret in the repository.
 - Pages caches each file for 10 minutes (`max-age=600`), so a phone can show the old version for up to 10 minutes after a deploy.
+- Each push to `main` also runs a check (`.github/workflows/check.yml`): the scripts parse, the JSON files are valid, nothing inline would be blocked by the CSP, and every file that `index.html` and the `ASSETS` list in `sw.js` name exists. A failed check does not stop the deploy, but GitHub emails you. Run it locally with `node .github/check.mjs`.
 - `https://gtfunes.github.io/very-simple-truco/` redirects to the custom domain.
 - To serve the site without a custom domain, delete `CNAME` and clear the domain in **Settings → Pages**. All paths are relative, so the site works under `/very-simple-truco/` too.
 
@@ -80,6 +82,7 @@ Google Analytics 4 is wired in, but it stays off until the site has a measuremen
 2. Paste it into `GA_MEASUREMENT_ID` at the top of `analytics.js`, then push to `main`.
 
 - It never runs on `localhost`, `*.localhost` or LAN addresses, so local tests are not counted.
+- `gtag.js` (about 180 KB, ten times the app) loads only after the page has loaded, so it never slows the game or the offline cache down.
 - Besides the page views, it sends two events: `game_start` (the first point, with the length of the game) and `game_end` (with the length of the game). The events never include the names people type.
 - The ads features are off: ad cookies are denied by default (consent mode), and Google signals and ad personalization are disabled. To turn Google signals on, add the extra Google domains to the Content Security Policy first.
 - Google Analytics sets its own cookies (`_ga`). The site has no cookie banner, so it does not ask visitors for consent. Visitors in the EU or the UK would need one.
