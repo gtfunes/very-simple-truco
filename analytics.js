@@ -1,6 +1,6 @@
 // Google Analytics 4. Paste this site's measurement ID ("G-…") here to turn it on; empty keeps it off.
 // The same file is in the bingo, generala and truco repositories; only this line differs.
-const GA_MEASUREMENT_ID = '';
+const GA_MEASUREMENT_ID = 'G-CDEF2S4QL0';
 
 // Everything else lives in a function, so its names never clash with the ones in app.js
 // (classic scripts share one global scope). Besides the ID, it adds only window.dataLayer and window.track.
