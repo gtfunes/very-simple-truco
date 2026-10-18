@@ -38,8 +38,19 @@ const GA_MEASUREMENT_ID = 'G-CDEF2S4QL0';
     allow_ad_personalization_signals: false,
   });
 
-  const script = document.createElement('script');
-  script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GA_MEASUREMENT_ID)}`;
-  document.head.append(script);
+  // gtag.js is about 180 KB, ten times the whole app. It loads only after the page has loaded (and the
+  // browser is idle), so it never slows the app or the offline cache down on a weak signal.
+  // Calls made before then (the config above, early events) wait in window.dataLayer.
+  const loadGtag = () => {
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GA_MEASUREMENT_ID)}`;
+    document.head.append(script);
+  };
+  const whenIdle = () => {
+    if ('requestIdleCallback' in window) window.requestIdleCallback(loadGtag, { timeout: 3000 });
+    else setTimeout(loadGtag, 500);
+  };
+  if (document.readyState === 'complete') whenIdle();
+  else window.addEventListener('load', whenIdle, { once: true });
 })();
