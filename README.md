@@ -38,6 +38,7 @@ House rules vary (in Mendoza, for example, the falta envido always wins the game
 | `index.html`           | Page markup and meta tags.                                               |
 | `styles.css`           | All styles. Phone layout first.                                          |
 | `app.js`               | Points, matches, falta envido, wake lock, tab sync and service worker registration. |
+| `analytics.js`         | Google Analytics: off until `GA_MEASUREMENT_ID` is set.                 |
 | `sw.js`                | Service worker: network first, with the cache as the offline fallback.   |
 | `manifest.webmanifest` | Home Screen app name, colors and icons.                                  |
 | `icons/`               | `icon.svg` (source and favicon) and the PNG sizes made from it.          |
@@ -71,13 +72,26 @@ The setup, done once:
 - `https://gtfunes.github.io/very-simple-truco/` redirects to the custom domain.
 - To serve the site without a custom domain, delete `CNAME` and clear the domain in **Settings → Pages**. All paths are relative, so the site works under `/very-simple-truco/` too.
 
+## Analytics
+
+Google Analytics 4 is wired in, but it stays off until the site has a measurement ID:
+
+1. In Google Analytics, add a web data stream for `truco.gtfunes.com` and copy its measurement ID (`G-…`).
+2. Paste it into `GA_MEASUREMENT_ID` at the top of `analytics.js`, then push to `main`.
+
+- It never runs on `localhost`, `*.localhost` or LAN addresses, so local tests are not counted.
+- Besides the page views, it sends two events: `game_start` (the first point, with the length of the game) and `game_end` (with the length of the game). The events never include the names people type.
+- The ads features are off: ad cookies are denied by default (consent mode), and Google signals and ad personalization are disabled. To turn Google signals on, add the extra Google domains to the Content Security Policy first.
+- Google Analytics sets its own cookies (`_ga`). The site has no cookie banner, so it does not ask visitors for consent. Visitors in the EU or the UK would need one.
+- `analytics.js` is the same file in the bingo, generala and truco repositories. Only the ID line differs.
+
 ## Security
 
-The site is static: no backend, no accounts, no cookies, and no third-party scripts. Team names and saved state go into the page as text, never as HTML.
+The site is static: no backend and no accounts. The only third-party script is Google Analytics, and only once it has an ID (see [Analytics](#analytics)). Team names and saved state go into the page as text, never as HTML.
 
 GitHub Pages cannot send custom headers, so `index.html` sets these with `<meta>` tags:
 
-- A strict Content Security Policy: only files from the site itself, no inline scripts or styles.
+- A strict Content Security Policy: only files from the site itself and the Google Analytics domains, no inline scripts or styles.
 - `referrer: no-referrer`.
 - `robots: noindex, nofollow`, so search engines skip the site. Delete it if you want the site indexed.
 

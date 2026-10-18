@@ -128,7 +128,9 @@ function faltaText() {
 
 function addPoints(index, delta) {
   const team = state.teams[index];
-  if (winnerIndex() !== -1 && delta > 0) return;
+  const wasOver = winnerIndex() !== -1;
+  if (wasOver && delta > 0) return;
+  const firstPoint = !hasPoints();
   const before = team.points;
   const after = Math.min(state.target, Math.max(0, before + delta));
   if (after === before) return;
@@ -138,7 +140,10 @@ function addPoints(index, delta) {
   save();
   render();
   keepAwake();
-  const won = winnerIndex() !== -1;
+  // Only the point that ends the game: a −1 for the losing team after the end is not a new win.
+  const won = !wasOver && winnerIndex() !== -1;
+  if (firstPoint) window.track?.('game_start', { target: state.target });
+  if (won) window.track?.('game_end', { target: state.target });
   navigator.vibrate?.(won ? [40, 80, 160] : 20);
   if (!reducedMotion.matches) {
     els.teams[index].points.animate([{ transform: 'scale(1.18)' }, { transform: 'scale(1)' }], {
