@@ -85,7 +85,7 @@ Google Analytics 4 is wired in, but it stays off until the site has a measuremen
 - `gtag.js` (about 180 KB, ten times the app) loads only after the page has loaded, so it never slows the game or the offline cache down.
 - Besides the page views, it sends two events: `game_start` (the first point, with the length of the game) and `game_end` (with the length of the game). The events never include the names people type.
 - The ads features are off: ad cookies are denied by default (consent mode), and Google signals and ad personalization are disabled. To turn Google signals on, add the extra Google domains to the Content Security Policy first.
-- Google Analytics sets its own cookies (`_ga`). The site has no cookie banner, so it does not ask visitors for consent. Visitors in the EU or the UK would need one.
+- Google Analytics can set its own cookies (`_ga`). The tag is skipped when the browser sends Do Not Track or Global Privacy Control. There is no site-level consent prompt.
 - `analytics.js` is the same file in the bingo, generala and truco repositories. Only the ID line differs.
 
 ## Security
@@ -96,7 +96,6 @@ GitHub Pages cannot send custom headers, so `index.html` sets these with `<meta>
 
 - A strict Content Security Policy: only files from the site itself and the Google Analytics domains, no inline scripts or styles.
 - `referrer: no-referrer`.
-- `robots: noindex, nofollow`, so search engines skip the site. Delete it if you want the site indexed.
 
 The protections that exist only as headers are missing: `frame-ancestors` and `X-Frame-Options` (framing by other sites), `X-Content-Type-Options`, `Cross-Origin-Opener-Policy` and a Permissions Policy. The risk is low: the app has no accounts and no data worth stealing. GitHub Pages serves the site over HTTPS once **Enforce HTTPS** is on.
 

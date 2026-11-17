@@ -1,6 +1,7 @@
 // Offline fallback for the app shell. Network first, so a new deploy shows up on the next load;
 // the cache only answers when the network is down or too slow.
-const CACHE = 'truco-v1';
+const CACHE_PREFIX = 'truco-v';
+const CACHE = CACHE_PREFIX + '2';
 const NETWORK_TIMEOUT_MS = 3000;
 const ASSETS = [
   './',
@@ -25,7 +26,9 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches
       .keys()
-      .then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key))))
+      .then((keys) => Promise.all(keys
+        .filter((key) => key.startsWith(CACHE_PREFIX) && key !== CACHE)
+        .map((key) => caches.delete(key))))
       .then(() => self.clients.claim()),
   );
 });
@@ -56,7 +59,9 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(request.url);
   url.search = '';
   url.hash = '';
-  const cacheKey = request.mode === 'navigate' ? new URL('./', self.registration.scope).href : url.href;
-  if (request.mode !== 'navigate' && !ASSET_URLS.has(cacheKey)) return;
+  const root = self.registration.scope;
+  if (request.mode === 'navigate' && url.href !== root && url.href !== new URL('index.html', root).href) return;
+  if (request.mode !== 'navigate' && !ASSET_URLS.has(url.href)) return;
+  const cacheKey = request.mode === 'navigate' ? root : url.href;
   event.respondWith(networkFirst(request, cacheKey));
 });

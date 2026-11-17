@@ -7,7 +7,9 @@ const GA_MEASUREMENT_ID = 'G-CDEF2S4QL0';
 (() => {
   // Local dev servers (localhost, bingo.localhost…) and LAN tests never send data.
   const LOCAL_HOST = /^(localhost|127\.0\.0\.1|\[::1\])$|\.localhost$|^(10|192\.168)\.|^172\.(1[6-9]|2\d|3[01])\./;
-  const enabled = Boolean(GA_MEASUREMENT_ID) && !LOCAL_HOST.test(window.location.hostname);
+  const dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+  const privacySignal = dnt === '1' || dnt === 'yes' || navigator.globalPrivacyControl === true;
+  const enabled = Boolean(GA_MEASUREMENT_ID) && !LOCAL_HOST.test(window.location.hostname) && !privacySignal;
 
   window.dataLayer = window.dataLayer || [];
   function gtag() {
