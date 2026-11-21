@@ -85,6 +85,22 @@ select {
   cursor: pointer;
 }
 
+/* The browser's own arrow sits against the rounded edge, so the select draws its own, further in.
+   It is two gradients, not an image: the CSP allows images from the site only (no data: URIs). */
+select {
+  -webkit-appearance: none;
+  appearance: none;
+  padding-right: 2.75rem;
+  background-image:
+    linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position:
+    right 1.4rem center,
+    right calc(1.4rem - 6px) center;
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+}
+
 button {
   transition: transform 0.1s;
 }
